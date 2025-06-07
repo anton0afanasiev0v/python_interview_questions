@@ -1,0 +1,60 @@
+1_последовательности
+2_множества_и_отображения
+3_функции
+4_итераторы_и_генераторы
+5_классы_объекты
+6_модули_пакеты
+7_исключения
+8_декораторы
+9_метаклассы
+10_ввод-вывод
+11_тестирование
+12_функциональное_программирование
+13_GIL_потоки_процессы
+Django
+FAST_API
+Веб-разработка
+HTTP
+ООП
+Какие принципы программирования вы знаете
+шаблоны
+Алгоритмы, структуры
+SDLC
+БД
+RebbitMQ
+Kafka
+Redis
+Elastick serch
+Дизайн-интервью
+Вопросы работодателю
+
+
+1_sequences
+2_sets_and_reflections
+3_functions
+4_iterators_and_generators
+5_classes_objects
+6_modules_packages
+7_exceptions
+8_decorators
+9_metaclasses
+10_input/output
+11_testing
+12_functional_programming
+13_GIL_threads_processes
+Django
+FAST_API
+Web Development
+HTTP
+OOP
+What programming principles do you know
+templates
+Algorithms, structures
+SDLC
+DATABASE
+RebbitMQ
+Kafka
+Redis
+Elastick serch
+Design Interviews
+Employer questions
