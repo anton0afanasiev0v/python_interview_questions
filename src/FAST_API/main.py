@@ -6,9 +6,14 @@ from strawberry.fastapi import GraphQLRouter
 
 @strawberry.type
 class Query:
+
     @strawberry.field
     def hello(self) -> str:
         return "Hello World"
+    
+    @strawberry.field
+    def user(self) -> str:
+        return "user"
 
 
 schema = strawberry.Schema(Query)
