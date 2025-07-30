@@ -194,10 +194,10 @@ def open_file(name):
 def timer_decorator(func):
     def wrapper(*args, **kwargs):
         start = time.now()
-            # вызов оборачиваемой функции
-            result = func(*args, **kwargs)
-            print(f'Время выполнения функции - {time.now() - start} сек')
-            return result
+        # вызов оборачиваемой функции
+        result = func(*args, **kwargs)
+        print(f'Время выполнения функции - {time.now() - start} сек')
+        return result
     return wrapper
 
 # если без синтаксического сахара: hello_world = timer_decorator(hello_world).
@@ -1256,7 +1256,7 @@ total = reduce(lambda acc, order: acc + order.total, orders, 0)
 
 </details>
 
-<details><summary>Отличие set и  frozenset</summary>
+<details><summary>Отличие set и frozenset</summary>
 
 В Python, как `set`, так и `frozenset` представляют собой коллекции уникальных элементов, но у них есть ключевые различия:
 
