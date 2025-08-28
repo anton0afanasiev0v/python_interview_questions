@@ -1,4 +1,4 @@
-name: app
+name: qa
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -34,7 +34,7 @@ dependencies:
   path_provider: ^2.1.1
   csv: ^5.0.3
   flutter_markdown: ^0.6.15
-  file_picker: ^6.1.1
+  file_picker: ^8.0.0+1
   # Для десктопных платформ (если нужно):
   sqflite_common_ffi: ^2.2.1
 
