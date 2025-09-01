@@ -1624,9 +1624,8 @@ car2.drive()  # Выведет: Синяя BMW едет!
 https://proglib.io/p/python-oop 
 https://www.youtube.com/playlist?list=PLNi5HdK6QEmX9fxp3_IBFx1O5tiTmKlYm
 
-</details>
-<details>
-<summary>Наследование, Полиморфизм, Инкапсуляция, Абстракция</summary>
+
+</details><details><summary>Наследование, Полиморфизм, Инкапсуляция, Абстракция</summary>
 
 ### Наследование, Полиморфизм, Инкапсуляция, Абстракция
 
