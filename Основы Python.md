@@ -3861,4 +3861,500 @@ ba[0] = 104  # Можно изменять
 
 Каждая структура данных оптимизирована для определенных операций, поэтому выбор зависит от конкретной задачи!
 
-<details>
+
+Отличное уточнение! Давайте разберем подробнее.
+
+## Односвязный список (Singly Linked List)
+
+**Что это:**  
+Структура данных, где каждый элемент (узел) содержит:
+- Данные
+- **Одну ссылку** на следующий элемент
+
+**Как называют иначе:**
+- Односторонний список
+- Однонаправленный список
+- Линейный связный список
+- Просто "связный список" (в базовом понимании)
+
+```python
+# Визуализация: A → B → C → None
+# Можно двигаться только вперед
+```
+
+## Двусвязный список (Doubly Linked List)
+
+**Что это:**  
+Структура данных, где каждый элемент (узел) содержит:
+- Данные
+- **Две ссылки**: на следующий и на предыдущий элемент
+
+**Как называют иначе:**
+- Двусторонний список
+- Двунаправленный список
+- Двухсвязный список
+- Список с обратными ссылками
+
+```python
+# Визуализация: None ← A ⇄ B ⇄ C → None
+# Можно двигаться в обе стороны
+```
+
+## Сравнительная таблица
+
+| Характеристика | Односвязный список | Двусвязный список |
+|----------------|-------------------|------------------|
+| **Ссылки** | 1 ссылка (на следующий) | 2 ссылки (на следующий и предыдущий) |
+| **Память** | Меньше (только next) | Больше (next + prev) |
+| **Направление обхода** | Только вперед | Вперед и назад |
+| **Удаление** | Сложнее (нужен предыдущий элемент) | Проще (есть доступ к предыдущему) |
+| **Вставка** | Быстрая в начало | Быстрая в начало и конец |
+| **Альтернативные названия** | Односторонний, однонаправленный | Двусторонний, двунаправленный |
+
+## Практический пример различий
+
+```python
+# Удаление в односвязном списке сложнее
+def delete_node_singly(self, target_data):
+    current = self.head
+    prev = None
+    while current:
+        if current.data == target_data:
+            if prev:
+                prev.next = current.next  # Обход удаляемого
+            else:
+                self.head = current.next  # Удаление головы
+            return
+        prev = current
+        current = current.next  # Нужно хранить предыдущий элемент
+
+# Удаление в двусвязном списке проще
+def delete_node_doubly(self, target_data):
+    current = self.head
+    while current:
+        if current.data == target_data:
+            if current.prev:
+                current.prev.next = current.next  # Следующий от предыдущего
+            if current.next:
+                current.next.prev = current.prev  # Предыдущий от следующего
+            return
+        current = current.next
+```
+
+## Когда что использовать?
+
+**Односвязный список:**  
+- Когда нужна экономия памяти
+- Когда обход только в одном направлении
+- Стеки (LIFO)
+- Очереди (если есть указатель на хвост)
+
+**Двусвязный список:**  
+- Когда нужен обратный обход
+- Когда часто удаляются элементы
+- Браузерная история (вперед/назад)
+- Кэширование (LRU cache)
+- Сложные алгоритмы с двунаправленным обходом
+
+Оба типа списков являются **связными списками** (linked lists), но различаются количеством и направлением связей между элементами.
+
+</details><details><summary>LIFO & FIFO</summary> 
+
+Отлично! **LIFO** и **FIFO** — это две фундаментальные концепции обработки данных. Давайте разберем их подробно.
+
+## LIFO (Last In, First Out) - "Последним пришел, первым ушел"
+
+### Что это?
+- **Последний** добавленный элемент обрабатывается **первым**
+- Как **стопка тарелок** — вы берете верхнюю (последнюю положенную)
+- Как **стек** (stack) в программировании
+
+### Основные операции:
+- **Push** — добавить элемент на вершину
+- **Pop** — удалить и вернуть верхний элемент
+- **Peek** — посмотреть верхний элемент без удаления
+
+### Реализация в Python:
+```python
+# 1. Используя список
+stack = []
+stack.append(1)  # push(1) - [1]
+stack.append(2)  # push(2) - [1, 2]
+stack.append(3)  # push(3) - [1, 2, 3]
+
+last = stack.pop()  # pop() -> 3, осталось [1, 2]
+top = stack[-1]     # peek() -> 2
+
+# 2. Класс Stack
+class Stack:
+    def __init__(self):
+        self.items = []
+    
+    def push(self, item):
+        self.items.append(item)
+    
+    def pop(self):
+        if not self.is_empty():
+            return self.items.pop()
+    
+    def peek(self):
+        if not self.is_empty():
+            return self.items[-1]
+    
+    def is_empty(self):
+        return len(self.items) == 0
+    
+    def size(self):
+        return len(self.items)
+
+# Использование
+s = Stack()
+s.push("первый")
+s.push("второй")
+s.push("третий")  # LIFO: третий -> второй -> первый
+print(s.pop())  # "третий" (последний добавленный)
+```
+
+### Где используется?
+- **Отмена действий** (Ctrl+Z) — последнее действие отменяется первым
+- **Вызов функций** — стек вызовов в программировании
+- **Синтаксический анализ** — проверка скобок {}, (), []
+- **История браузера** — кнопка "Назад"
+
+## FIFO (First In, First Out) - "Первым пришел, первым ушел"
+
+### Что это?
+- **Первый** добавленный элемент обрабатывается **первым**
+- Как **очередь** в магазине — кто первый встал, того первого обслужили
+- Как **очередь** (queue) в программировании
+
+### Основные операции:
+- **Enqueue** — добавить элемент в конец
+- **Dequeue** — удалить и вернуть первый элемент
+- **Front** — посмотреть первый элемент без удаления
+
+### Реализация в Python:
+```python
+# 1. Используя collections.deque (оптимально)
+from collections import deque
+
+queue = deque()
+queue.append(1)  # enqueue(1) - [1]
+queue.append(2)  # enqueue(2) - [1, 2]
+queue.append(3)  # enqueue(3) - [1, 2, 3]
+
+first = queue.popleft()  # dequeue() -> 1, осталось [2, 3]
+front = queue[0]         # front() -> 2
+
+# 2. Класс Queue
+class Queue:
+    def __init__(self):
+        self.items = deque()
+    
+    def enqueue(self, item):
+        self.items.append(item)
+    
+    def dequeue(self):
+        if not self.is_empty():
+            return self.items.popleft()
+    
+    def front(self):
+        if not self.is_empty():
+            return self.items[0]
+    
+    def is_empty(self):
+        return len(self.items) == 0
+    
+    def size(self):
+        return len(self.items)
+
+# Использование
+q = Queue()
+q.enqueue("первый")
+q.enqueue("второй")
+q.enqueue("третий")  # FIFO: первый -> второй -> третий
+print(q.dequeue())  # "первый" (первый добавленный)
+```
+
+### Где используется?
+- **Очередь печати** — документы печатаются в порядке отправки
+- **Обработка запросов** — веб-сервер обрабатывает запросы по порядку
+- **Буферы данных** — данные обрабатываются в порядке поступления
+- **Очередь сообщений** — RabbitMQ, Kafka
+
+## Сравнительная таблица
+
+| Характеристика | LIFO (Stack) | FIFO (Queue) |
+|----------------|-------------|-------------|
+| **Принцип** | Last In, First Out | First In, First Out |
+| **Аналогия** | Стопка тарелок | Очередь в магазине |
+| **Добавление** | Push (в конец) | Enqueue (в конец) |
+| **Удаление** | Pop (с конца) | Dequeue (с начала) |
+| **Просмотр** | Peek (последний) | Front (первый) |
+| **Сложность операций** | O(1) для push/pop | O(1) для enqueue/dequeue |
+| **Использование** | Отмена действий, вызов функций | Очереди, обработка запросов |
+
+## Практические примеры
+
+### Пример LIFO: Проверка скобок
+```python
+def is_valid_parentheses(s: str) -> bool:
+    stack = []
+    brackets = {')': '(', '}': '{', ']': '['}
+    
+    for char in s:
+        if char in brackets.values():  # Открывающая скобка
+            stack.append(char)
+        elif char in brackets:  # Закрывающая скобка
+            if not stack or stack.pop() != brackets[char]:
+                return False
+    return len(stack) == 0
+
+print(is_valid_parentheses("({[]})"))  # True
+print(is_valid_parentheses("({[})"))   # False
+```
+
+### Пример FIFO: Очередь задач
+```python
+from collections import deque
+
+class TaskQueue:
+    def __init__(self):
+        self.queue = deque()
+    
+    def add_task(self, task):
+        print(f"Добавлена задача: {task}")
+        self.queue.append(task)
+    
+    def process_tasks(self):
+        while self.queue:
+            task = self.queue.popleft()
+            print(f"Обрабатывается: {task}")
+    
+    def show_queue(self):
+        print(f"Очередь задач: {list(self.queue)}")
+
+# Использование
+tq = TaskQueue()
+tq.add_task("Задача 1")
+tq.add_task("Задача 2")
+tq.add_task("Задача 3")
+tq.show_queue()  # Очередь задач: ['Задача 1', 'Задача 2', 'Задача 3']
+tq.process_tasks()
+# Обрабатывается: Задача 1
+# Обрабатывается: Задача 2
+# Обрабатывается: Задача 3
+```
+
+## Вывод
+
+- **LIFO** — когда важен **последний** элемент (стек)
+- **FIFO** — когда важен **порядок** поступления (очередь)
+
+Обе структуры чрезвычайно важны и используются повсеместно в программировании и компьютерных науках!
+
+</details>
+
+</details><details><summary>Что такое дженерики ?</summary> 
+
+Отличный вопрос! **Дженерики (Generics)** — это важная концепция в программировании, которая позволяет писать код, способный работать с разными типами данных, оставаясь при этом типобезопасным.
+
+## Простое объяснение
+
+Представьте, что у вас есть **контейнер** (например, список). Без дженериков вы могли бы положить в него что угодно: яблоки, книги, машины. Но когда вы достаете предмет, вы не знаете, что именно это будет.
+
+**Дженерики** — это как этикетка на контейнере:
+- `List<Apple>` — список только для яблок
+- `List<Book>` — список только для книг
+- `List<Car>` — список только для машин
+
+## Пример в Python (с typing модулем)
+
+Python — язык с динамической типизацией, но дженерики помогают добавить проверку типов.
+
+```python
+from typing import List, TypeVar, Generic, Optional
+
+# Без дженериков (нетипизированный список)
+def get_first_element(items):
+    return items[0]  # Может вернуть что угодно
+
+# С дженериками (типизированный список)
+def get_first_string(strings: List[str]) -> str:
+    return strings[0]  # Гарантированно вернет строку
+
+# Использование
+numbers: List[int] = [1, 2, 3]
+first_num = get_first_string(numbers)  # Ошибка типов! Ожидался List[str]
+```
+
+## Базовые компоненты дженериков
+
+### 1. **TypeVar** - параметр типа
+```python
+from typing import TypeVar, List
+
+T = TypeVar('T')  # Произвольный тип
+U = TypeVar('U')  # Другой произвольный тип
+
+def get_first(items: List[T]) -> T:
+    """Возвращает первый элемент списка любого типа"""
+    return items[0]
+
+# Автоматически определяет типы
+first_str: str = get_first(["a", "b", "c"])  # T = str
+first_int: int = get_first([1, 2, 3])        # T = int
+```
+
+### 2. **Generic классы**
+```python
+from typing import Generic, TypeVar, Optional
+
+T = TypeVar('T')
+
+class Box(Generic[T]):
+    """Контейнер для одного элемента типа T"""
+    
+    def __init__(self, content: T):
+        self.content = content
+    
+    def get_content(self) -> T:
+        return self.content
+    
+    def set_content(self, new_content: T) -> None:
+        self.content = new_content
+
+# Использование
+string_box: Box[str] = Box("hello")
+number_box: Box[int] = Box(42)
+
+value: str = string_box.get_content()  # Тип: str
+# value: int = string_box.get_content()  # Ошибка типов!
+```
+
+### 3. **Ограниченные типы (Bounded TypeVar)**
+```python
+from typing import TypeVar, List
+
+# T должен быть числом (int или float)
+Number = TypeVar('Number', int, float)
+
+def sum_numbers(numbers: List[Number]) -> Number:
+    return sum(numbers)
+
+# Работает
+result_int: int = sum_numbers([1, 2, 3])
+result_float: float = sum_numbers([1.5, 2.5])
+
+# Не работает
+# result = sum_numbers(["a", "b"])  # Ошибка: str не Number
+```
+
+## Практические примеры
+
+### 1. **Универсальная функция**
+```python
+from typing import TypeVar, Sequence
+
+T = TypeVar('T')
+
+def find_index(items: Sequence[T], target: T) -> int:
+    """Находит индекс элемента в последовательности"""
+    for i, item in enumerate(items):
+        if item == target:
+            return i
+    return -1
+
+# Работает с любыми типами
+find_index(["a", "b", "c"], "b")  # 1
+find_index([1, 2, 3], 2)          # 1
+```
+
+### 2. **Generic структура данных**
+```python
+from typing import Generic, TypeVar, Optional
+
+T = TypeVar('T')
+
+class Stack(Generic[T]):
+    """Стек (LIFO) с типизированными элементами"""
+    
+    def __init__(self):
+        self.items: List[T] = []
+    
+    def push(self, item: T) -> None:
+        self.items.append(item)
+    
+    def pop(self) -> Optional[T]:
+        return self.items.pop() if self.items else None
+    
+    def peek(self) -> Optional[T]:
+        return self.items[-1] if self.items else None
+
+# Типизированные стеки
+string_stack: Stack[str] = Stack()
+string_stack.push("hello")
+string_stack.push("world")
+
+number_stack: Stack[int] = Stack()
+number_stack.push(1)
+number_stack.push(2)
+```
+
+### 3. **Несколько типовых параметров**
+```python
+from typing import TypeVar, Tuple, Dict
+
+K = TypeVar('K')  # Key type
+V = TypeVar('V')  # Value type
+
+def invert_dict(original: Dict[K, V]) -> Dict[V, K]:
+    """Меняет ключи и значения местами"""
+    return {value: key for key, value in original.items()}
+
+# Использование
+original: Dict[str, int] = {"a": 1, "b": 2}
+inverted: Dict[int, str] = invert_dict(original)  # {1: "a", 2: "b"}
+```
+
+## Преимущества дженериков
+
+1. **Типобезопасность** — ловим ошибки на этапе разработки
+2. **Читаемость** — понятно, с какими типами работает код
+3. **Переиспользование** — один код для разных типов
+4. **Автодополнение** — IDE лучше понимает типы
+
+## Встроенные Generic типы в Python
+
+```python
+from typing import List, Dict, Set, Tuple, Optional, Union
+
+# Списки
+numbers: List[int] = [1, 2, 3]
+
+# Словари
+age_map: Dict[str, int] = {"Alice": 25, "Bob": 30}
+
+# Множества
+unique_numbers: Set[int] = {1, 2, 3}
+
+# Кортежи с разными типами
+person: Tuple[str, int] = ("Alice", 25)
+
+# Опциональные значения
+optional_name: Optional[str] = None  # Эквивалент Union[str, None]
+
+# Объединение типов
+id_type: Union[int, str] = 123  # Может быть int или str
+```
+
+## Важно!
+
+Дженерики в Python — это **аннотации типов**, они не влияют на выполнение кода в runtime, но помогают:
+- **mypy** — статический анализатор кода
+- **IDE** — автодополнение и проверка ошибок
+- **Разработчикам** — понимание кода
+
+Без инструментов проверки типов дженерики работают просто как документация!
+
+</details>
