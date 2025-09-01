@@ -1,23 +1,29 @@
-class FileManager:
-    def __init__(self, filename, mode='r'):
-        self.filename = filename
-        self.mode = mode
-        self.file = None
+class ValidationError(Exception):
+    """Исключение для ошибок валидации"""
     
-    def __enter__(self):
-        self.file = open(self.filename, self.mode)
-        return self.file
+    def __init__(self, message, field_name=None, value=None):
+        self.message = message
+        self.field_name = field_name
+        self.value = value
+        super().__init__(message)
     
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        if self.file:
-            self.file.close()
-        # Обработка исключений (необязательно)
-        if exc_type is not None:
-            print(f"Произошла ошибка: {exc_val}")
-        # Возвращаем False, чтобы исключение продолжило распространяться
-        # Возвращаем True, чтобы подавить исключение
-        return False
+    def __str__(self):
+        if self.field_name:
+            return f"{self.message} (Поле: {self.field_name}, Значение: {self.value})"
+        return self.message
 
 # Использование
-with FileManager('test.txt', 'w') as f:
-    f.write('Hello, World!')
+def validate_age(age):
+    if not isinstance(age, int):
+        raise ValidationError("Возраст должен быть числом", "age", age)
+    if age < 0:
+        raise ValidationError("Возраст не может быть отрицательным", "age", age)
+    if age > 150:
+        raise ValidationError("Возраст слишком большой", "age", age)
+
+try:
+    validate_age(-5)
+except ValidationError as e:
+    print(f"Ошибка валидации: {e}")
+    print(f"Поле: {e.field_name}")
+    print(f"Значение: {e.value}")
