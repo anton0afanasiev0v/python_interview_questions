@@ -83,7 +83,7 @@
 например, для работы с файлом: открываете его, записываете данные и закрываете. Без контекстного менеджера необходимо явно вызывать метод `close()` для файла. Однако, если во время записи данных возникнет ошибка, файл может остаться открытым, что приведет к утечке ресурсов. Контекстные менеджеры решают эту проблему, гарантируя автоматическое закрытие файла.
 Пример - работа с файлом с использованием выражения **with as:**
 
-```
+```Python
 with open('hello.txt', 'a') as file:
     file.write('\nHello Python!')
 
@@ -99,7 +99,7 @@ Is the file closed? True
 
 Реализация собственного контекст менеджера делается через реализацию магических методов `__enter__` и `__exit__`:
 
-```
+```Python
 class OpenFile:
     def __init__(self, filename, mode):
         self.filename = filename
@@ -126,7 +126,7 @@ with OpenFile('example.txt', 'w') as f:
 **Декоратор `@contextmanager`:**
 Библиотека `contextlib` предоставляет удобный способ определения контекстных менеджеров с помощью декоратора `@contextmanager`. Он позволяет создавать менеджеры контекста из генераторов, что делает код более лаконичным.
 
-```
+```Python
 from contextlib import contextmanager
 
 @contextmanager
@@ -268,14 +268,16 @@ for item in my_iterator:
 
 ```Python
 def simple_generator(n):
-"""Генерирует числа от 0 до n-1."""
-for i in range(n):
-yield i
+    """Генерирует числа от 0 до n-1."""
+    for i in range(n):
+        yield i
+
 # Создание объекта-генератора
 my_generator = simple_generator(3)
+
 # Итерация по генератору
 for i in my_generator:
-print(i)
+    print(i)
 # Вывод: 0 1 2 
 ```
 
@@ -285,9 +287,10 @@ print(i)
 ```Python
 # Генераторное выражение для квадратов чисел от 1 до 5
 squares = (x**2 for x in range(1, 6))
+
 # Итерация по генератору
 for i in squares:
-print(i)
+    print(i)
 # Вывод: 1 4 9 16 25
 ```
 
@@ -370,14 +373,16 @@ print(i)
 
 ```Python
 def func1():
-a = 1
-b = 'line'
-c = [1, 2, 3]
-def func2():
-c.append(4)
-a = a + 1
-return a, b, c
-return func2
+    a = 1
+    b = 'line'
+    c = [1, 2, 3]
+    def func2():
+        c.append(4)
+        a = a + 1
+        return a, b, c
+    
+    return func2
+
 call_func = func1()
 call_func()
 ---------------------------------------------------------------------------
@@ -407,15 +412,17 @@ line
 
 ```Python
 def func1():
-a = 1
-b = 'line'
-c = [1, 2, 3]
-def func2():
-nonlocal a
-c.append(4)
-a += 1
-return a, b, c
-return func2
+    a = 1
+    b = 'line'
+    c = [1, 2, 3]
+
+    def func2():
+        nonlocal a
+        c.append(4)
+        a += 1
+        return a, b, c
+    return func2
+
 call_func = func1()
 call_func()
 ---------------------------------------------------------------------------
@@ -430,9 +437,10 @@ Output: (2, 'line', [1, 2, 3, 4])
 
 ```python
 def outer_function(x):
-def inner_function(y):
-return x + y
-return inner_function
+    def inner_function(y):
+        return x + y
+    return inner_function
+
 closure = outer_function(10)
 print(closure(5))  # Вывод: 15
 ```
@@ -512,16 +520,83 @@ print(greet())  # Выведет "Привет!"
 
 ```Python
 try:
-исполяем какой-то код
+    исполяем какой-то код
 except Exception as e:
-обработка исключения
+    обработка исключения
 else:
-код, который будет исполнен в случае, когда не возникает исключения
+    код, который будет исполнен в случае, когда не возникает исключения
 finally:
-код, который гарантированно будет исполнен последним (всегда исполняется)
+    код, который гарантированно будет исполнен последним (всегда исполняется)
 ```
 
 # Иерархия исключений
+
+```
+BaseException
+├── SystemExit
+├── KeyboardInterrupt
+├── GeneratorExit
+└── Exception
+    ├── StopIteration
+    ├── StopAsyncIteration
+    ├── ArithmeticError
+    │   ├── FloatingPointError
+    │   ├── OverflowError
+    │   └── ZeroDivisionError
+    ├── AssertionError
+    ├── AttributeError
+    ├── BufferError
+    ├── EOFError
+    ├── ImportError
+    │   └── ModuleNotFoundError
+    ├── LookupError
+    │   ├── IndexError
+    │   └── KeyError
+    ├── MemoryError
+    ├── NameError
+    │   └── UnboundLocalError
+    ├── OSError
+    │   ├── BlockingIOError
+    │   ├── ChildProcessError
+    │   ├── ConnectionError
+    │   │   ├── BrokenPipeError
+    │   │   ├── ConnectionAbortedError
+    │   │   ├── ConnectionRefusedError
+    │   │   └── ConnectionResetError
+    │   ├── FileExistsError
+    │   ├── FileNotFoundError
+    │   ├── InterruptedError
+    │   ├── IsADirectoryError
+    │   ├── NotADirectoryError
+    │   ├── PermissionError
+    │   ├── ProcessLookupError
+    │   └── TimeoutError
+    ├── ReferenceError
+    ├── RuntimeError
+    │   ├── NotImplementedError
+    │   └── RecursionError
+    ├── SyntaxError
+    │   └── IndentationError
+    │       └── TabError
+    ├── SystemError
+    ├── TypeError
+    ├── ValueError
+    │   └── UnicodeError
+    │       ├── UnicodeDecodeError
+    │       ├── UnicodeEncodeError
+    │       └── UnicodeTranslateError
+    └── Warning
+        ├── DeprecationWarning
+        ├── PendingDeprecationWarning
+        ├── RuntimeWarning
+        ├── SyntaxWarning
+        ├── UserWarning
+        ├── FutureWarning
+        ├── ImportWarning
+        ├── UnicodeWarning
+        └── BytesWarning
+```
+
 
 - Base exception
 - SystemExit
