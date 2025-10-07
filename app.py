@@ -30,6 +30,19 @@ class MarkdownQAEditor(QMainWindow):
         self.setCentralWidget(central_widget)
         main_layout = QVBoxLayout(central_widget)
         
+        # Панель статистики
+        self.stats_label = QLabel("Всего вопросов: 0")
+        self.stats_label.setStyleSheet("""
+            QLabel {
+                background-color: #404040;
+                color: #ffffff;
+                padding: 5px 10px;
+                border-radius: 3px;
+                font-weight: bold;
+            }
+        """)
+        main_layout.addWidget(self.stats_label)
+        
         # Прогресс-бар
         self.progress_bar = QProgressBar()
         self.progress_bar.setVisible(False)
@@ -49,6 +62,7 @@ class MarkdownQAEditor(QMainWindow):
         self.tree_widget.setAcceptDrops(True)
         self.tree_widget.setDropIndicatorShown(True)
         self.tree_widget.itemSelectionChanged.connect(self.on_item_selected)
+        self.tree_widget.itemChanged.connect(self.on_item_changed)
         
         # Настраиваем стиль tree_widget для темной темы
         self.tree_widget.setStyleSheet("""
@@ -227,6 +241,38 @@ class MarkdownQAEditor(QMainWindow):
         
         # Текущий выбранный элемент
         self.current_item = None
+        
+        # Инициализируем счетчик вопросов
+        self.update_questions_count()
+
+    def count_questions(self):
+        """Подсчет общего количества вопросов в дереве"""
+        count = 0
+        
+        def count_recursive(item):
+            nonlocal count
+            item_data = item.data(0, Qt.UserRole) or {}
+            if item_data.get("type") == "question":
+                count += 1
+            
+            # Рекурсивно обходим дочерние элементы
+            for i in range(item.childCount()):
+                count_recursive(item.child(i))
+        
+        # Обходим все корневые элементы
+        for i in range(self.tree_widget.topLevelItemCount()):
+            count_recursive(self.tree_widget.topLevelItem(i))
+        
+        return count
+
+    def update_questions_count(self):
+        """Обновление отображения счетчика вопросов"""
+        total_questions = self.count_questions()
+        self.stats_label.setText(f"Всего вопросов: {total_questions}")
+
+    def on_item_changed(self):
+        """Обработчик изменения элемента дерева"""
+        self.update_questions_count()
 
     def apply_dark_theme(self):
         """Применение темной темы ко всему приложению"""
@@ -648,6 +694,7 @@ class MarkdownQAEditor(QMainWindow):
     def new_file(self):
         self.tree_widget.clear()
         self.current_file = None
+        self.update_questions_count()
         self.statusBar().showMessage("Создан новый файл")
 
     def open_file(self):
@@ -677,6 +724,7 @@ class MarkdownQAEditor(QMainWindow):
         try:
             self.parse_markdown(content)
             self.current_file = file_path
+            self.update_questions_count()
             self.statusBar().showMessage(f"Загружен файл: {file_path}")
         except Exception as e:
             QMessageBox.critical(self, "Ошибка", f"Ошибка при разборе файла: {str(e)}")
@@ -1027,6 +1075,7 @@ class MarkdownQAEditor(QMainWindow):
                 "content": content
             })
             
+            self.update_questions_count()
             self.statusBar().showMessage("Изменения сохранены")
 
     def add_child_item(self):
@@ -1040,6 +1089,7 @@ class MarkdownQAEditor(QMainWindow):
             self.current_item.setExpanded(True)
             self.tree_widget.setCurrentItem(new_item)
             self.question_edit.setFocus()
+            self.update_questions_count()
 
     def add_sibling_item(self):
         parent = self.current_item.parent() if self.current_item else None
@@ -1056,6 +1106,7 @@ class MarkdownQAEditor(QMainWindow):
         
         self.tree_widget.setCurrentItem(new_item)
         self.question_edit.setFocus()
+        self.update_questions_count()
 
     def delete_current_item(self):
         if self.current_item:
@@ -1070,6 +1121,7 @@ class MarkdownQAEditor(QMainWindow):
             self.question_edit.clear()
             self.content_edit.clear()
             self.preview_view.setHtml("<p>Выберите элемент для редактирования...</p>")
+            self.update_questions_count()
 
 def main():
     app = QApplication(sys.argv)
