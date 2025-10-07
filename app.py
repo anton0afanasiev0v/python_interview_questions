@@ -227,7 +227,6 @@ class MarkdownQAEditor(QMainWindow):
         lines = [line for line in content.split('\n') if line.strip()]
         
         stack = []  # Стек для отслеживания вложенности
-        current_topic = None
         i = 0
         inside_details = False  # Флаг - находимся ли внутри блока details
         
@@ -263,12 +262,12 @@ class MarkdownQAEditor(QMainWindow):
                 continue
             
             # Распознавание заголовков тем (только если не внутри details)
-            if not stack and line.startswith('#') and not line.startswith('<details'):
+            if line.startswith('#') and not line.startswith('<details'):
                 level = len(line) - len(line.lstrip('#'))
                 topic_text = line.lstrip('#').strip()
                 
                 if topic_text:
-                    # Закрываем предыдущую тему если есть
+                    # Очищаем стек от всех предыдущих тем
                     while stack and stack[-1].data(0, Qt.UserRole)["type"] == "topic":
                         stack.pop()
                     
@@ -315,10 +314,9 @@ class MarkdownQAEditor(QMainWindow):
                                 "content": []
                             })
                             self.tree_widget.addTopLevelItem(general_topic)
+                            stack.append(general_topic)
                         
                         general_topic.addChild(item)
-                        if general_topic not in stack:
-                            stack.append(general_topic)
                     
                     stack.append(item)
             
@@ -327,21 +325,6 @@ class MarkdownQAEditor(QMainWindow):
                 inside_details = False  # Выходим из блока details
                 if stack and stack[-1].data(0, Qt.UserRole)["type"] == "question":
                     stack.pop()
-            
-            # Обработка конца темы (при встрече новой темы или конца файла)
-            elif (stack and 
-                stack[-1].data(0, Qt.UserRole)["type"] == "topic" and
-                (i == len(lines) - 1 or 
-                (lines[i].startswith('#') and not lines[i].startswith('<details')))):
-                
-                # Проверяем уровень вложенности для правильного закрытия тем
-                if i < len(lines) - 1 and lines[i].startswith('#'):
-                    next_level = len(lines[i]) - len(lines[i].lstrip('#'))
-                    current_level = stack[-1].data(0, Qt.UserRole)["level"]
-                    
-                    # Если следующая тема того же или более высокого уровня, закрываем текущую
-                    if next_level <= current_level:
-                        stack.pop()
             
             i += 1
         
@@ -376,7 +359,6 @@ class MarkdownQAEditor(QMainWindow):
             content_text += "\n".join(content_lines)
         
         self.content_display.setMarkdown(content_text)
-
 
     def generate_markdown(self):
         def generate_item_markdown(item, level=0):
