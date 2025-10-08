@@ -39,6 +39,7 @@ class MarkdownQAEditor(QMainWindow):
                 padding: 5px 10px;
                 border-radius: 3px;
                 font-weight: bold;
+                max-height: 20px;
             }
         """)
         main_layout.addWidget(self.stats_label)
@@ -189,8 +190,8 @@ class MarkdownQAEditor(QMainWindow):
         button_layout = QHBoxLayout()
         self.save_button = QPushButton("Сохранить изменения")
         self.save_button.clicked.connect(self.save_current_item)
-        self.add_child_button = QPushButton("Добавить подвопрос")
-        self.add_child_button.clicked.connect(self.add_child_item)
+        # self.add_child_button = QPushButton("Добавить подвопрос")
+        # self.add_child_button.clicked.connect(self.add_child_item)
         self.add_sibling_button = QPushButton("Добавить вопрос")
         self.add_sibling_button.clicked.connect(self.add_sibling_item)
         self.delete_button = QPushButton("Удалить вопрос")
@@ -219,12 +220,12 @@ class MarkdownQAEditor(QMainWindow):
         """
         
         self.save_button.setStyleSheet(button_style)
-        self.add_child_button.setStyleSheet(button_style)
+        # self.add_child_button.setStyleSheet(button_style)
         self.add_sibling_button.setStyleSheet(button_style)
         self.delete_button.setStyleSheet(button_style)
         
         button_layout.addWidget(self.save_button)
-        button_layout.addWidget(self.add_child_button)
+        # button_layout.addWidget(self.add_child_button)
         button_layout.addWidget(self.add_sibling_button)
         button_layout.addWidget(self.delete_button)
         right_layout.addLayout(button_layout)
@@ -585,7 +586,7 @@ class MarkdownQAEditor(QMainWindow):
             self.content_edit.setStyleSheet("")
             self.content_tabs.setStyleSheet("")
             self.save_button.setStyleSheet("")
-            self.add_child_button.setStyleSheet("")
+            # self.add_child_button.setStyleSheet("")
             self.add_sibling_button.setStyleSheet("")
             self.delete_button.setStyleSheet("")
             
